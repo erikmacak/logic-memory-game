@@ -10,17 +10,13 @@ type CardType = {
   value: number | string;
 };
 
+type BestTimes = {
+  [key: string]: number;
+};
+
 const colors = [
-  "#FF0000",
-  "#00FF00",
-  "#0000FF",
-  "#FFFF00",
-  "#FF00FF",
-  "#00FFFF",
-  "#FFA500",
-  "#800080",
-  "#A52A2A",
-  "#008080",
+  "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF",
+  "#00FFFF", "#FFA500", "#800080", "#A52A2A", "#008080",
 ];
 
 const GameBoard = () => {
@@ -32,17 +28,16 @@ const GameBoard = () => {
   const [gameType, setGameType] = useState<"numbers" | "colors">("numbers");
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("easy");
   const [time, setTime] = useState(0);
+  const [bestTimes, setBestTimes] = useState<BestTimes>({});
+
+  const getKey = () => `${gameType}-${difficulty}`;
 
   const getPairsCount = () => {
     switch (difficulty) {
-      case "easy":
-        return 6;
-      case "medium":
-        return 8;
-      case "hard":
-        return 10;
-      default:
-        return 8;
+      case "easy": return 6;
+      case "medium": return 8;
+      case "hard": return 10;
+      default: return 8;
     }
   };
 
@@ -62,6 +57,23 @@ const GameBoard = () => {
     return shuffled.map((color, i) => ({ id: i, value: color }));
   };
 
+  const loadBestTimes = () => {
+    const stored = localStorage.getItem("bestTimes");
+    if (stored) {
+      setBestTimes(JSON.parse(stored));
+    }
+  };
+
+  const updateBestTime = () => {
+    const key = getKey();
+    const currentBest = bestTimes[key];
+    if (!currentBest || time < currentBest) {
+      const updated = { ...bestTimes, [key]: time };
+      setBestTimes(updated);
+      localStorage.setItem("bestTimes", JSON.stringify(updated));
+    }
+  };
+
   const startNewGame = () => {
     let newCards: CardType[] = [];
     if (gameType === "numbers") {
@@ -78,7 +90,18 @@ const GameBoard = () => {
   };
 
   useEffect(() => {
-    if (pairsLeft === 0) return;
+    loadBestTimes();
+  }, []);
+
+  useEffect(() => {
+    startNewGame();
+  }, [gameType, difficulty]);
+
+  useEffect(() => {
+    if (pairsLeft === 0) {
+      updateBestTime();
+      return;
+    }
 
     const timer = setInterval(() => {
       setTime((prev) => prev + 1);
@@ -86,10 +109,6 @@ const GameBoard = () => {
 
     return () => clearInterval(timer);
   }, [pairsLeft]);
-
-  useEffect(() => {
-    startNewGame();
-  }, [gameType, difficulty]);
 
   const handleCardClick = (index: number) => {
     if (flipped.includes(index) || matched.includes(index) || flipped.length === 2) return;
@@ -119,15 +138,13 @@ const GameBoard = () => {
         startNewGame={startNewGame}
         setDifficulty={setDifficulty}
       />
-      <ScoreBoard attempts={attempts} pairsLeft={pairsLeft} time={time} />
-
-      <div
-        className={`grid gap-4 mt-4 ${
-          difficulty === "hard"
-            ? "grid-cols-5"
-            : "grid-cols-4"
-        }`}
-      >
+      <ScoreBoard
+        attempts={attempts}
+        pairsLeft={pairsLeft}
+        time={time}
+        bestTime={bestTimes[getKey()]}
+      />
+      <div className={`grid gap-4 mt-4 ${difficulty === "hard" ? "grid-cols-5" : "grid-cols-4"}`}>
         {cards.map((card, index) => (
           <Card
             key={card.id}

@@ -21,12 +21,10 @@ const Card = ({ value, isFlipped, onClick, gameType = "numbers" }: Props) => {
         }`}
         style={{ transformStyle: "preserve-3d" }}
       >
-        {/* Front side - otazník */}
         <div className="absolute w-full h-full backface-hidden bg-gray-300 border-2 rounded flex items-center justify-center text-black text-xl font-bold">
           ?
         </div>
 
-        {/* Back side - hodnota */}
         <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-blue-300 border-2 rounded flex items-center justify-center text-xl font-bold">
           {gameType === "numbers" ? (
             value
