@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 import Card from "./Card";
@@ -28,6 +28,7 @@ const GameBoard = () => {
   const [attempts, setAttempts] = useState(0);
   const [pairsLeft, setPairsLeft] = useState(8);
   const [gameType, setGameType] = useState<"numbers" | "colors">("numbers");
+  const [time, setTime] = useState(0);
 
   const generateNumberCards = (): CardType[] => {
     const values = Array.from({ length: 8 }, (_, i) => i + 1);
@@ -54,7 +55,22 @@ const GameBoard = () => {
     setMatched([]);
     setAttempts(0);
     setPairsLeft(8);
+    setTime(0);
   };
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    if (pairsLeft > 0) {
+      interval = setInterval(() => {
+        setTime((prev) => prev + 1);
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [pairsLeft]);
 
   useEffect(() => {
     startNewGame();
@@ -84,7 +100,7 @@ const GameBoard = () => {
   return (
     <div className="p-4">
       <Controls setGameType={setGameType} startNewGame={startNewGame} />
-      <ScoreBoard attempts={attempts} pairsLeft={pairsLeft} />
+      <ScoreBoard attempts={attempts} pairsLeft={pairsLeft} time={time} />
 
       <div className="grid grid-cols-4 gap-4 mt-4">
         {cards.map((card, index) => (
