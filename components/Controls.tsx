@@ -1,7 +1,7 @@
 "use client";
 
 type Props = {
-  setGameType: (type: "numbers" | "colors") => void;
+  setGameType: (type: "numbers" | "colors" | "symbols") => void;
   startNewGame: () => void;
   setDifficulty: (level: "easy" | "medium" | "hard") => void;
 };
@@ -15,6 +15,7 @@ const Controls = ({ setGameType, startNewGame, setDifficulty }: Props) => {
       >
         <option value="numbers">Čísla</option>
         <option value="colors">Barvy</option>
+        <option value="symbols">Symboly</option>
       </select>
 
       <select

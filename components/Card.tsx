@@ -6,15 +6,12 @@ type Props = {
   value: number | string;
   isFlipped: boolean;
   onClick: () => void;
-  gameType?: "numbers" | "colors";
+  gameType?: "numbers" | "colors" | "symbols";
 };
 
 const Card = ({ value, isFlipped, onClick, gameType = "numbers" }: Props) => {
   return (
-    <div
-      className="w-16 h-16 perspective cursor-pointer"
-      onClick={onClick}
-    >
+    <div className="w-16 h-16 perspective cursor-pointer" onClick={onClick}>
       <div
         className={`relative w-full h-full duration-500 transform-style-preserve-3d ${
           isFlipped ? "rotate-y-180" : "rotate-y-0"
@@ -26,7 +23,7 @@ const Card = ({ value, isFlipped, onClick, gameType = "numbers" }: Props) => {
         </div>
 
         <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-blue-300 border-2 rounded flex items-center justify-center text-xl font-bold">
-          {gameType === "numbers" ? (
+          {gameType === "numbers" || gameType === "symbols" ? (
             value
           ) : (
             <div

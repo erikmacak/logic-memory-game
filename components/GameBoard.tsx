@@ -19,13 +19,15 @@ const colors = [
   "#00FFFF", "#FFA500", "#800080", "#A52A2A", "#008080",
 ];
 
+const symbols = ["★", "♥", "☂", "♣", "♠", "✈", "♫", "☀", "⚽", "🍀"];
+
 const GameBoard = () => {
   const [cards, setCards] = useState<CardType[]>([]);
   const [flipped, setFlipped] = useState<number[]>([]);
   const [matched, setMatched] = useState<number[]>([]);
   const [attempts, setAttempts] = useState(0);
   const [pairsLeft, setPairsLeft] = useState(8);
-  const [gameType, setGameType] = useState<"numbers" | "colors">("numbers");
+  const [gameType, setGameType] = useState<"numbers" | "colors" | "symbols">("numbers");
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("easy");
   const [time, setTime] = useState(0);
   const [bestTimes, setBestTimes] = useState<BestTimes>({});
@@ -57,6 +59,14 @@ const GameBoard = () => {
     return shuffled.map((color, i) => ({ id: i, value: color }));
   };
 
+  const generateSymbolCards = (): CardType[] => {
+    const pairsCount = getPairsCount();
+    const selectedSymbols = symbols.slice(0, pairsCount);
+    const pairs = [...selectedSymbols, ...selectedSymbols];
+    const shuffled = pairs.sort(() => Math.random() - 0.5);
+    return shuffled.map((symbol, i) => ({ id: i, value: symbol }));
+  };
+
   const loadBestTimes = () => {
     const stored = localStorage.getItem("bestTimes");
     if (stored) {
@@ -80,6 +90,8 @@ const GameBoard = () => {
       newCards = generateNumberCards();
     } else if (gameType === "colors") {
       newCards = generateColorCards();
+    } else if (gameType === "symbols") {
+      newCards = generateSymbolCards();
     }
     setCards(newCards);
     setFlipped([]);
