@@ -5,9 +5,6 @@ The result is a simple memory game (Pexeso), where players flip cards to find ma
 
 The application's interface is in **Czech**, but all commits and pull requests are written in **English**.
 
-🔗 **Live demo:**  
-[https://vercel.com/erik-macaks-projects/logic-memory-game](https://vercel.com/erik-macaks-projects/logic-memory-game)
-
 > ⚠️ **Note:** The UI was designed and tested on a **laptop screen**. It may not be fully responsive on mobile or tablet devices.
 
 ---
@@ -25,7 +22,7 @@ The application's interface is in **Czech**, but all commits and pull requests a
 - Game type selector:
   - 🔢 Numbers
   - 🎨 Colors
-  - 😄 Symbols (emojis)
+  - 😄 Symbols
 - Timer to track game duration.
 - Difficulty levels:
   - 🟢 Easy
@@ -61,7 +58,12 @@ npm run dev
 Visit http://localhost:3000 in your browser to see the app running.
 
 ## 🧱 Built With
--Next.js
--React
--TypeScript
--localStorage for best time tracking
+- Next.js
+- React
+- TypeScript
+- localStorage for best time tracking
+
+## 📌 Notes
+
+- Built using the App Router architecture in Next.js 13+
+- Tailwind CSS for styling
